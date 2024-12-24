@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اسلامی کوئز گیم</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+        #quiz-container {
+            width: 500px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2a9d8f;
+        }
+        button {
+            background-color: #2a9d8f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #264e36;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .choices {
+            list-style-type: none;
+            padding: 0;
+        }
+        .choices li {
+            background-color: #e0fbfc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .choices li:hover {
+            background-color: #a8dadc;
+        }
+        .correct {
+            background-color: #28a745;
+        }
+        .incorrect {
+            background-color: #dc3545;
+        }
+        .feedback {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .score {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2a9d8f;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <h1>اسلامی کوئز گیم</h1>
+    <div id="quiz-content">
+        <p class="question">اسلام کا سب سے بڑا فرض کیا ہے؟</p>
+        <ul class="choices">
+            <li data-answer="0">نماز</li>
+            <li data-answer="1">روزہ</li>
+            <li data-answer="2">زکوة</li>
+            <li data-answer="3">حج</li>
+        </ul>
+    </div>
+    <button id="next-question" style="display: none;">اگلا سوال</button>
+    <div class="feedback"></div>
+    <div class="score" style="display: none;"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "اسلام کا سب سے بڑا فرض کیا ہے؟",
+            choices: ["نماز", "روزہ", "زکوة", "حج"],
+            correctAnswer: 0,
+            feedback: "نماز دین اسلام کا سب سے اہم فرض ہے۔"
+        },
+        {
+            question: "حضرت محمد صلی اللہ علیہ وسلم کا لقب کیا تھا؟",
+            choices: ["الامین", "صدیق", "فاروق", "کریم"],
+            correctAnswer: 0,
+            feedback: "حضرت محمد صلی اللہ علیہ وسلم کا لقب 'الامین' تھا۔"
+        },
+        {
+            question: "کون سی کتاب مسلمانوں کی مقدس کتاب ہے؟",
+            choices: ["انجیل", "قرآن", "تورات", "زبور"],
+            correctAnswer: 1,
+            feedback: "قرآن مسلمانوں کی مقدس کتاب ہے۔"
+        },
+        {
+            question: "اسلام میں کتنے ستون ہیں؟",
+            choices: ["4", "5", "6", "7"],
+            correctAnswer: 1,
+            feedback: "اسلام میں پانچ ستون ہیں: ایمان، نماز، روزہ، زکوة، اور حج۔"
+        },
+        {
+            question: "سب سے پہلا نبی کون تھے؟",
+            choices: ["حضرت آدم علیہ السلام", "حضرت نوح علیہ السلام", "حضرت ابراہیم علیہ السلام", "حضرت موسیٰ علیہ السلام"],
+            correctAnswer: 0,
+            feedback: "حضرت آدم علیہ السلام سب سے پہلے نبی تھے۔"
+        },
+        {
+            question: "مسلمانوں کے کس شہر میں حج ادا کرنا ضروری ہے؟",
+            choices: ["مکہ", "مدینہ", "یمن", "دمشق"],
+            correctAnswer: 0,
+            feedback: "حج کو مکہ مکرمہ میں ادا کرنا ضروری ہے۔"
+        },
+        {
+            question: "اسلام میں روزے کا مہینہ کون سا ہے؟",
+            choices: ["رمضان", "شوال", "محرم", "ذوالحجہ"],
+            correctAnswer: 0,
+            feedback: "اسلام میں روزے کا مہینہ رمضان ہے۔"
+        },
+        {
+            question: "حضرت علی علیہ السلام کے والد کا کیا نام تھا؟",
+            choices: ["حضرت ابو طالب", "حضرت عمر بن خطاب", "حضرت عثمان بن عفان", "حضرت ابو بکر"],
+            correctAnswer: 0,
+            feedback: "حضرت علی علیہ السلام کے والد کا نام حضرت ابو طالب تھا۔"
+        },
+        {
+            question: "کتنی رکعات فرض ہیں نماز فجر میں؟",
+            choices: ["2", "4", "3", "1"],
+            correctAnswer: 0,
+            feedback: "نماز فجر میں 2 رکعات فرض ہیں۔"
+        },
+        {
+            question: "حج فرض ہونے کی عمر کتنی ہوتی ہے؟",
+            choices: ["18 سال", "15 سال", "12 سال", "20 سال"],
+            correctAnswer: 0,
+            feedback: "حج فرض ہونے کی عمر 18 سال ہے۔"
+        },
+        {
+            question: "سب سے پہلے قرآن کا کون سا حصہ نازل ہوا؟",
+            choices: ["سورة العلق", "سورة الفاتحہ", "سورة البقرہ", "سورة الکوثر"],
+            correctAnswer: 0,
+            feedback: "سب سے پہلے قرآن کا حصہ 'سورة العلق' نازل ہوا۔"
+        },
+        {
+            question: "اسلام کا کون سا مذہبی مقام ہے جہاں تمام مسلمان پانچ وقت کی نماز پڑھتے ہیں؟",
+            choices: ["مکہ", "مدینہ", "بیت المقدس", "کعبہ"],
+            correctAnswer: 3,
+            feedback: "مسلمان کعبہ کی طرف رخ کر کے نماز پڑھتے ہیں۔"
+        },
+        {
+            question: "اسلام میں سب سے پہلی جنگ کا کیا نام تھا؟",
+            choices: ["جنگ بدر", "جنگ احد", "جنگ خندق", "جنگ یرموک"],
+            correctAnswer: 0,
+            feedback: "اسلام میں سب سے پہلی جنگ 'جنگ بدر' تھی۔"
+        },
+        {
+            question: "حضرت عائشہ رضی اللہ عنہ کا تعلق کس قبیلے سے تھا؟",
+            choices: ["قریش", "مکہ", "بنی ہاشم", "بنی امیہ"],
+            correctAnswer: 0,
+            feedback: "حضرت عائشہ رضی اللہ عنہ کا تعلق قریش قبیلے سے تھا۔"
+        },
+        {
+            question: "کیا حضرت ابراہیم علیہ السلام کا بیٹا اسماعیل علیہ السلام تھا؟",
+            choices: ["ہاں", "نہیں"],
+            correctAnswer: 0,
+            feedback: "جی ہاں، حضرت ابراہیم علیہ السلام کا بیٹا اسماعیل علیہ السلام تھا۔"
+        },
+        {
+            question: "یوم عاشورہ کس مہینے میں آتا ہے؟",
+            choices: ["ذوالحجہ", "شوال", "محرم", "رجب"],
+            correctAnswer: 2,
+            feedback: "یوم عاشورہ محرم کے مہینے میں آتا ہے۔"
+        },
+        {
+            question: "اسلام میں کتنے روزے فرض ہیں؟",
+            choices: ["12", "30", "28", "29"],
+            correctAnswer: 1,
+            feedback: "اسلام میں رمضان کے مہینے کے روزے فرض ہیں، جو 30 دن ہوتے ہیں۔"
+        },
+        {
+            question: "سب سے پہلے کون اسلام میں داخل ہوا؟",
+            choices: ["حضرت ابو بکر", "حضرت علی", "حضرت عثمان", "حضرت زید بن حارثہ"],
+            correctAnswer: 0,
+            feedback: "سب سے پہلے حضرت ابو بکر رضی اللہ عنہ اسلام میں داخل ہوئے۔"
+        },
+        {
+            question: "کتنے صحابہ کرام نے جنگ بدر میں شرکت کی؟",
+            choices: ["314", "313", "305", "300"],
+            correctAnswer: 1,
+            feedback: "جنگ بدر میں 313 صحابہ کرام نے شرکت کی۔"
+        },
+        {
+            question: "سب سے آخری نبی کون تھے؟",
+            choices: ["حضرت محمد صلی اللہ علیہ وسلم", "حضرت عیسی علیہ السلام", "حضرت موسی علیہ السلام", "حضرت ابراہیم علیہ السلام"],
+            correctAnswer: 0,
+            feedback: "سب سے آخری نبی حضرت محمد صلی اللہ علیہ وسلم تھے۔"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const question = questions[currentQuestionIndex];
+        const questionContainer = document.querySelector(".question");
+        const choicesContainer = document.querySelector(".choices");
+        const feedbackContainer = document.querySelector(".feedback");
+
+        questionContainer.textContent = question.question;
+        choicesContainer.innerHTML = '';
+        feedbackContainer.textContent = '';
+
+        question.choices.forEach((choice, index) => {
+            const li = document.createElement("li");
+            li.textContent = choice;
+            li.onclick = () => checkAnswer(index);
+            choicesContainer.appendChild(li);
+        });
+    }
+
+    function checkAnswer(selectedIndex) {
+        const question = questions[currentQuestionIndex];
+        const feedbackContainer = document.querySelector(".feedback");
+
+        if (selectedIndex === question.correctAnswer) {
+            feedbackContainer.textContent = `صحیح جواب! ${question.feedback}`;
+            feedbackContainer.classList.add("correct");
+            feedbackContainer.classList.remove("incorrect");
+            score++;
+        } else {
+            feedbackContainer.textContent = `غلط جواب! ${question.feedback}`;
+            feedbackContainer.classList.add("incorrect");
+            feedbackContainer.classList.remove("correct");
+        }
+
+        document.getElementById("next-question").style.display = "inline-block";
+        disableChoices();
+    }
+
+    function disableChoices() {
+        const choices = document.querySelectorAll(".choices li");
+        choices.forEach(choice => choice.style.pointerEvents = "none");
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+            document.getElementById("next-question").style.display = "none";
+            document.querySelector(".feedback").textContent = '';
+        } else {
+            endQuiz();
+        }
+    }
+
+    function endQuiz() {
+        const scoreContainer = document.querySelector(".score");
+        scoreContainer.textContent = `آپ کا سکور: ${score} / ${questions.length}`;
+        scoreContainer.style.display = "block";
+        document.getElementById("next-question").style.display = "none";
+    }
+
+    document.getElementById("next-question").addEventListener("click", nextQuestion);
+
+    // Initializing the quiz
+    loadQuestion();
+</script>
+
+</body>
+</html>
